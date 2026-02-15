@@ -86,7 +86,6 @@ We welcome contributions including bug fixes, feature enhancements, documentatio
 
 ---
 
-```markdown
 ## 🧑‍💻 Code of Conduct
 
 Please follow the project's Code of Conduct and maintain respectful and inclusive communication.
@@ -94,4 +93,3 @@ Please follow the project's Code of Conduct and maintain respectful and inclusiv
 ---
 
 Thank you for helping improve SocialShareButton ❤️
-```
