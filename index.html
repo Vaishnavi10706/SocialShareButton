@@ -200,6 +200,22 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
 
+    .cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.discord-btn {
+  background: #5865F2;
+  color: #fff;
+}
+
+.discord-btn:hover {
+  background: #4752c4;
+}
+
     footer {
       text-align: center;
       color: rgba(255, 255, 255, 0.8);
@@ -501,12 +517,27 @@ new SocialShareButton({
 </div>
 
     <!-- CTA Section -->
-    <div class="cta-section">
-      <h2 style="color: #fff; margin-bottom: 20px;">Ready to Get Started?</h2>
-      <a href="https://github.com/AOSSIE-Org/SocialShareButton" class="cta-button" target="_blank" rel="noopener">
-        View on GitHub →
-      </a>
-    </div>
+   <!-- CTA Section -->
+<div class="cta-section">
+  <h2 style="color: #fff; margin-bottom: 20px;">Ready to Get Started?</h2>
+
+  <div class="cta-buttons">
+    <a href="https://github.com/AOSSIE-Org/SocialShareButton" 
+       class="cta-button" 
+       target="_blank" 
+       rel="noopener">
+      View on GitHub →
+    </a>
+
+    <a href="https://discord.com/channels/1022871757289422898/1479012884209078365" 
+       class="cta-button discord-btn" 
+       target="_blank" 
+       rel="noopener">
+      Join Discord 💬
+    </a>
+  </div>
+
+</div>
 
     <footer>
       <p>Made with ❤️ by the AOSSIE community</p>
