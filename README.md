@@ -97,6 +97,18 @@ Lightweight social sharing component for web applications. Zero dependencies, fr
 > 🚫 **IMPORTANT:** Do NOT create new files like `ShareButton.jsx` or `ShareButton.tsx`!  
 > ✅ Add code directly to your **existing** component (Header, Navbar, etc.)
 
+### 🗺️ Integration Overview
+
+No matter which framework you use, integration always follows the same 3 steps:
+
+| Step | What to do | Where |
+|------|-----------|-------|
+| **1️⃣ Load Library** | Add CSS + JS (CDN links) | Global layout file — `index.html` / `layout.tsx` / `_document.tsx` |
+| **2️⃣ Add Container** | Place `<div id="share-button"></div>` | The UI component where you want the button to appear |
+| **3️⃣ Initialize** | Call `new SocialShareButton({ container: "#share-button" })` | Inside that component, after the DOM is ready (e.g. `useEffect`, `mounted`, `ngOnInit`) |
+
+> 💡 Pick your framework below for the full copy-paste snippet:
+
 <details>
 <summary><b>📦 Create React App</b></summary>
 
@@ -115,13 +127,16 @@ Lightweight social sharing component for web applications. Zero dependencies, fr
 </body>
 ```
 
-### Step 2: In your **existing** React component (e.g., `MainLayout.jsx`, `Header.jsx`, or wherever you want the button):
+### Step 2: Add to your layout or header component
+
+Open an **existing** component that renders on every page — typically `src/components/Header.jsx`, `src/layouts/MainLayout.jsx`, or your root `App.jsx`. Add the snippet below to that component so the share button is consistently available across your app.
 
 ```jsx
 import { useEffect, useRef } from "react";
 
-function YourComponent() {
-  // Use your actual component name (Header, Navbar, etc.)
+// ⬇️ Replace 'Header' with the name of the component where you want the
+// share button to appear — e.g. Navbar, MainLayout, App, etc.
+function Header() {
   const shareButtonRef = useRef(null);
   const initRef = useRef(false);
 
@@ -184,15 +199,18 @@ export default function RootLayout({
 }
 ```
 
-### Step 2: In your **existing** React component (e.g., `MainLayout.jsx`, `Header.jsx`, or wherever you want the button):
+### Step 2: Add to a Client Component (Header, Navbar, or similar)
+
+Because `SocialShareButton` manipulates the DOM, it must run inside a **Client Component** (note the `"use client"` directive at the top). Add the snippet below to an existing component such as `app/components/Header.tsx` or `app/components/Navbar.tsx` — any component already included in your layout.
 
 ```tsx
 "use client";
 
 import { useEffect, useRef } from "react";
 
-export default function YourComponent() {
-  // Use your actual component name
+// ⬇️ Replace 'Header' with the name of the component where you want the
+// share button to appear — e.g. Navbar, MainLayout, App, etc.
+export default function Header() {
   const shareButtonRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
@@ -278,13 +296,16 @@ export default function Document() {
 }
 ```
 
-### Step 2: In your **existing** component (e.g., `components/Header.tsx`, or wherever you want the button):
+### Step 2: Add to your Header, Navbar, or shared layout component
+
+Open an existing component that is rendered on every page — typically `components/Header.tsx`, `components/Navbar.tsx`, or `components/Layout.tsx`. Since `_document.tsx` loads the script globally, the button is ready to initialize in any of these components.
 
 ```tsx
 import { useEffect, useRef } from "react";
 
-export default function YourComponent() {
-  // Use your actual component name
+// ⬇️ Replace 'Header' with the name of the component where you want the
+// share button to appear — e.g. Navbar, MainLayout, App, etc.
+export default function Header() {
   const shareButtonRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
@@ -361,9 +382,13 @@ declare global {
 </body>
 ```
 
-### Step 2: Initialize in component
+### Step 2: Add a container element and initialize in your component
+
+Open your root or layout component (e.g., `App.vue`, `app.component.html`, or `App.jsx`). Add a container `<div>` where you want the button to appear, then initialize the button after the DOM is ready:
 
 ```javascript
+// Add <div id="share-button"></div> to your component's template/HTML first,
+// then initialize once the DOM is ready (e.g., in mounted(), ngOnInit(), or useEffect()):
 new window.SocialShareButton({
   container: "#share-button",
 });
