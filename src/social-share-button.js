@@ -46,6 +46,7 @@ class SocialShareButton {
 
     this._openTimeout = null;  // Track setTimeout for openModal animation
     this._closeTimeout = null; // Track setTimeout for closeModal animation
+    this._ownsBodyLock = false; // Track if this instance owns the body overflow lock
 
 
     if (this.options.container) {
@@ -307,14 +308,17 @@ class SocialShareButton {
     this.isModalOpen = true;
     this.modal.style.display = "flex";
 
-    // Shared body overflow management: capture original value only once
+    // Shared body overflow management: only increment counter if this instance doesn't already own the lock
     if (typeof document !== "undefined" && document.body) {
-      if (SocialShareButton._openModalCount === 0) {
-        // Save original overflow before first modal opens
-        SocialShareButton._originalBodyOverflow = document.body.style.overflow;
+      if (!this._ownsBodyLock) {
+        // Only increment if this instance doesn't already own a lock
+        if (SocialShareButton._openModalCount === 0) {
+          // Save original overflow before first modal opens
+          SocialShareButton._originalBodyOverflow = document.body.style.overflow;
+        }
+        SocialShareButton._openModalCount++;
+        this._ownsBodyLock = true; // Mark that this instance owns a lock
       }
-      // Increment counter and hide scroll
-      SocialShareButton._openModalCount++;
       document.body.style.overflow = "hidden";
     }
 
@@ -357,12 +361,14 @@ class SocialShareButton {
         this.isModalOpen = false;
         this.modal.style.display = "none";
 
-        // Shared body overflow management: restore only when last modal closes
-        if (typeof document !== "undefined" && document.body) {
+        // Shared body overflow management: only decrement if this instance owns the lock
+        if (this._ownsBodyLock && typeof document !== "undefined" && document.body) {
           // Decrement counter (guard against negative)
           if (SocialShareButton._openModalCount > 0) {
             SocialShareButton._openModalCount--;
           }
+          this._ownsBodyLock = false; // Release the lock
+          
           // Restore original overflow only when all modals are closed
           if (SocialShareButton._openModalCount === 0) {
             document.body.style.overflow = SocialShareButton._originalBodyOverflow || "";
@@ -490,12 +496,14 @@ class SocialShareButton {
       this.modal.parentNode.removeChild(this.modal);
     }
 
-    // Shared body overflow management: restore only if this modal was open
-    if (this.isModalOpen && typeof document !== "undefined" && document.body) {
+    // Shared body overflow management: only decrement if this instance owns the lock
+    if (this._ownsBodyLock && typeof document !== "undefined" && document.body) {
       // Decrement counter (guard against negative)
       if (SocialShareButton._openModalCount > 0) {
         SocialShareButton._openModalCount--;
       }
+      this._ownsBodyLock = false; // Release the lock
+      
       // Restore original overflow only when all modals are closed
       if (SocialShareButton._openModalCount === 0) {
         document.body.style.overflow = SocialShareButton._originalBodyOverflow || "";
