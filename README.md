@@ -105,7 +105,7 @@ No matter which framework you use, integration always follows the same 3 steps:
 |------|-----------|-------|
 | **1️⃣ Load Library** | Add CSS + JS (CDN links) | Global layout file — `index.html` / `layout.tsx` / `_document.tsx` |
 | **2️⃣ Add Container** | Place `<div id="share-button"></div>` | The UI component where you want the button to appear |
-| **3️⃣ Initialize** | Call `new SocialShareButton({ container: "#share-button" })` | Inside that component, after the DOM is ready (e.g. `useEffect`, `mounted`, `ngOnInit`) |
+| **3️⃣ Initialize** | Call `new SocialShareButton({ container: "#share-button" })` | Inside that component, after the DOM is ready (e.g. `useEffect`, `mounted`, `ngAfterViewInit`) |
 
 > 💡 Pick your framework below for the full copy-paste snippet:
 
@@ -133,12 +133,14 @@ Open an **existing** component that renders on every page — typically `src/com
 
 ```jsx
 import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom"; // omit if not using React Router
 
 // ⬇️ Replace 'Header' with the name of the component where you want the
 // share button to appear — e.g. Navbar, MainLayout, App, etc.
 function Header() {
   const shareButtonRef = useRef(null);
   const initRef = useRef(false);
+  const { pathname } = useLocation(); // omit if not using React Router
 
   useEffect(() => {
     if (initRef.current || !window.SocialShareButton) return;
@@ -155,6 +157,16 @@ function Header() {
       initRef.current = false;
     };
   }, []);
+
+  // Keep the share URL and title in sync with the current route
+  useEffect(() => {
+    if (shareButtonRef.current) {
+      shareButtonRef.current.updateOptions({
+        url: window.location.href,
+        title: document.title,
+      });
+    }
+  }, [pathname]); // re-runs on every client-side route change
 
   return (
     <header>
@@ -207,6 +219,7 @@ Because `SocialShareButton` manipulates the DOM, it must run inside a **Client C
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 // ⬇️ Replace 'Header' with the name of the component where you want the
 // share button to appear — e.g. Navbar, MainLayout, App, etc.
@@ -214,6 +227,7 @@ export default function Header() {
   const shareButtonRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const initButton = () => {
@@ -252,6 +266,16 @@ export default function Header() {
       initRef.current = false;
     };
   }, []);
+
+  // Keep the share URL and title in sync with the current route
+  useEffect(() => {
+    if (shareButtonRef.current) {
+      shareButtonRef.current.updateOptions({
+        url: window.location.href,
+        title: document.title,
+      });
+    }
+  }, [pathname]); // re-runs on every client-side navigation
 
   return (
     <header>
@@ -302,6 +326,7 @@ Open an existing component that is rendered on every page — typically `compone
 
 ```tsx
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 
 // ⬇️ Replace 'Header' with the name of the component where you want the
 // share button to appear — e.g. Navbar, MainLayout, App, etc.
@@ -309,6 +334,7 @@ export default function Header() {
   const shareButtonRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
+  const { pathname } = useRouter();
 
   useEffect(() => {
     const initButton = () => {
@@ -347,6 +373,16 @@ export default function Header() {
       initRef.current = false;
     };
   }, []);
+
+  // Keep the share URL and title in sync with the current route
+  useEffect(() => {
+    if (shareButtonRef.current) {
+      shareButtonRef.current.updateOptions({
+        url: window.location.href,
+        title: document.title,
+      });
+    }
+  }, [pathname]); // re-runs on every client-side navigation
 
   return (
     <header>
@@ -388,7 +424,7 @@ Open your root or layout component (e.g., `App.vue`, `app.component.html`, or `A
 
 ```javascript
 // Add <div id="share-button"></div> to your component's template/HTML first,
-// then initialize once the DOM is ready (e.g., in mounted(), ngOnInit(), or useEffect()):
+// then initialize once the DOM is ready (e.g., in mounted(), ngAfterViewInit(), or useEffect()):
 new window.SocialShareButton({
   container: "#share-button",
 });
@@ -592,7 +628,15 @@ function App() {
 ### Update URL Dynamically (SPA)
 
 ```jsx
+// Next.js App Router: import { usePathname } from "next/navigation";
+// Next.js Pages Router: import { useRouter } from "next/router";
+// React Router: import { useLocation } from "react-router-dom";
+
 const shareButton = useRef(null);
+// Get the current pathname from your router, e.g.:
+// const pathname = usePathname();          // Next.js App Router
+// const { pathname } = useRouter();        // Next.js Pages Router
+// const { pathname } = useLocation();      // React Router
 
 useEffect(() => {
   shareButton.current = new window.SocialShareButton({
@@ -604,9 +648,10 @@ useEffect(() => {
   if (shareButton.current) {
     shareButton.current.updateOptions({
       url: window.location.href,
+      title: document.title,
     });
   }
-}, [pathname]); // Update on route change
+}, [pathname]); // re-runs on every client-side route change
 ```
 
 ---
