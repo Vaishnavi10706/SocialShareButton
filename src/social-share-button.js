@@ -305,6 +305,9 @@ class SocialShareButton {
   }
 
   openModal() {
+    // Safety check: prevent errors if modal was destroyed
+    if (!this.modal) return;
+    
     this.isModalOpen = true;
     this.modal.style.display = "flex";
 
