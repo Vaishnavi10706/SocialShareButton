@@ -228,13 +228,6 @@ class SocialShareButton {
     return urls[platform] || "";
   }
 
-  /**
-   * Helper method to add an event listener and track it for cleanup
-   * @param {Element|Document|Window} element - The element to attach the listener to
-   * @param {string} type - The event type
-   * @param {Function} handler - The event handler function
-   * @param {Object|boolean} options - Optional event listener options
-   */
   _addEventListener(element, type, handler, options = false) {
     if (!element) return;
     element.addEventListener(type, handler, options);
