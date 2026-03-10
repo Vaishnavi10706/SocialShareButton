@@ -8,7 +8,7 @@ language: en
 early_access: false
 
 chat:
-  # CodeRabbit will automatically respond to @coderabbitai mentions in PR comments
+  # CodeRabbit will automatically reply to PR comments when auto_reply is true
   auto_reply: true
 
 issue_enrichment:
@@ -64,8 +64,8 @@ reviews:
   # Include summary of all changed files
   changed_files_summary: true
 
-  # Automatically request changes on the PR when issues are found
-  request_changes_workflow: true
+  # Comment-only reviews: false = leaves review comments without blocking PR approval or requesting changes
+  request_changes_workflow: false
 
   # Pre-merge checks to enforce before merging PRs
   pre_merge_checks:
@@ -130,23 +130,24 @@ reviews:
         Apply when the purpose of the PR/MR is related to fixing the feedback
         from a linter
 
-  # Review instructions that apply to all files
-  instructions: >-
-    - Verify that documentation and comments are free of spelling mistakes
-    - Ensure that test code is automated, comprehensive, and follows testing best practices
-    - Verify that all critical functionality is covered by tests
-    - Confirm that the code meets the project's requirements and objectives
-    - Confirm that copyright years are up to date whenever a file is changed
-    - Point out redundant obvious comments that do not add clarity to the code
-    - Ensure that comments are concise and suggest more concise comment statements if possible
-    - Discourage usage of verbose comment styles such as NatSpec
-    - Look for code duplication
-    - Suggest code completions when:
-        - seeing a TODO comment
-        - seeing a FIXME comment
-
   # Custom review instructions for specific file patterns
   path_instructions:
+    # Global review instructions that apply to all files
+    - path: "**/*"
+      instructions: |
+        - Verify that documentation and comments are free of spelling mistakes
+        - Ensure that test code is automated, comprehensive, and follows testing best practices
+        - Verify that all critical functionality is covered by tests
+        - Confirm that the code meets the project's requirements and objectives
+        - Confirm that copyright years are up to date whenever a file is changed
+        - Point out redundant obvious comments that do not add clarity to the code
+        - Ensure that comments are concise and suggest more concise comment statements if possible
+        - Discourage usage of verbose comment styles such as NatSpec
+        - Look for code duplication
+        - Suggest code completions when:
+            - seeing a TODO comment
+            - seeing a FIXME comment
+    
     # TypeScript/JavaScript files
     - path: "**/*.{ts,tsx,js,jsx}"
       instructions: |
