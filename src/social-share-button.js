@@ -699,6 +699,7 @@ class SocialShareButton {
    */
   _getContainer() {
     if (!this.options.container) return null;
+    if (typeof document === "undefined") return null;
     return typeof this.options.container === "string"
       ? document.querySelector(this.options.container)
       : this.options.container;
