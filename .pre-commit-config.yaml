@@ -1,22 +1,52 @@
+# Pre-commit hooks configuration
+# Documentation: https://pre-commit.com/
+
 repos:
+  # ----------------------------------
+  # 1. Universal Git / file hygiene
+  # ----------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-json
       - id: check-merge-conflict
       - id: check-added-large-files
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
 
+  # ----------------------------------
+  # 2. Config & data files validation
+  # ----------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+
+  # ----------------------------------
+  # 3. Code formatting
+  # ----------------------------------
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.2.5
     hooks:
       - id: prettier
         types_or: [javascript, css, html]
 
+  # ----------------------------------
+  # 4. JavaScript linting
+  # ----------------------------------
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v9.4.0
     hooks:
       - id: eslint
         types: [javascript]
+
+  # ----------------------------------
+  # 5. Security scanning
+  # ----------------------------------
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
